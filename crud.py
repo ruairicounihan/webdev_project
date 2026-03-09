@@ -1,15 +1,19 @@
 ### creating crud.py file to keep my app.py clean###
 ### can also use to test against DB without worrying about bringing the whole flask app up ###
 
-
-
 #searches DB for given string for artists, albums and songs
-def search_all(search=False):
-    pass
+def search_all(db, search=False):
+    albums = db.execute( """ SELECT * FROM albums;""").fetchall()
+  # print(type(albums))    
+    return albums
+    
 
 #search just artists
-def search_artist(search=False):
-    pass
+def search_artist(db, query):
+    albums = db.execute(""" SELECT * FROM albums
+                            WHERE artist = ?; """
+                            , (query,)).fetchall()
+    return albums
 
 #search just albums
 def search_album(search=False):
@@ -44,3 +48,9 @@ def add_favorites(album_id):
 
 def get_favorites():
     pass
+
+
+
+
+if __name__ == "__main__":
+    search_all()
