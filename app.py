@@ -17,9 +17,9 @@ def search():
     db = get_db()
     albums = crud.search_all(db)
     titles = [album["title"] for album in albums]
-    return "\n".join(titles)
+    return render_template("index.html", titles=titles)
 
-@app.route("/search_by" , methods=["POST"])    
+@app.route("/search_by" , methods=["POST", "GET"])    
 def search_by():
     form = SearchForm()
     if form.validate_on_submit():
@@ -27,10 +27,10 @@ def search_by():
         db = get_db()
         artist_results = crud.search_artist(db, query)
         album_results = crud.search_album(db, query)
+        
 
         results = artist_results + album_results 
 
-        titles = [f"{album["title"]}, {album["artist"]}" for album in results]
-
-        return "\n".join(titles)
+        return render_template("index.html", results=results, form=form)
+    return render_template("index.html", results=[], form=form)
         

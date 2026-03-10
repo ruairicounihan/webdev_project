@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Web Development 2</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    </head>
+
+    <nav>
+        <a href="">Home</a>
+        <a href="">Favourites</a>
+        <a href="">My Ratings</a>
+        <a href="">Browse</a>
+        <a href="">Log Out</a>
+    </nav>
+
+    <body>
+        {% block main_content %}{% endblock %}
+    </body>
+ </html>

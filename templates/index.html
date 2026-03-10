@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+    <p>
+        <form action="" method="post" novalidate>
+            {{ form.query.label }}
+            {{ form.query() }}
+            <br />
+            {{ form.submit() }}
+                    
+        </form>
+    </p>
+
+
+
+    <p>
+        {% if results %}
+            <ul>
+            {% for album in results %}
+                <li>{{ album.title }} by {{ album.artist }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No results found</p>
+        {% endif %}
+    </p>
+
+
+
+{% endblock %}
+
+
