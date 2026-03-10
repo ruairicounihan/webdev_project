@@ -8,7 +8,7 @@ DATABASE = os.path.join(os.path.abspath(os.path.dirname(__file__)), "reviews.db"
 def init_db():
     db = get_db()
     
-    with open(SQL_FILE, "r") as sql_schema:
+    with open("db_schema.sql", "r") as sql_schema:
         sql_script = sql_schema.read()
 
     # execute SQL commands

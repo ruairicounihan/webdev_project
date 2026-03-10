@@ -5,8 +5,10 @@ import crud
 from forms import SearchForm
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "Ruairi's Key"
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config["WTF_CSRF_ENABLED"] = False
 Session(app)
 app.teardown_appcontext(close_db)
 
@@ -17,16 +19,18 @@ def search():
     titles = [album["title"] for album in albums]
     return "\n".join(titles)
 
-@app.route("/search_by" , methods=["GET", "POST"])    
+@app.route("/search_by" , methods=["POST"])    
 def search_by():
     form = SearchForm()
     if form.validate_on_submit():
         query = form.query.data
         db = get_db()
-        results = crud.search_artist(db, query)
-        titles = [album["title"] for album in results]
-    return "\n".join(titles)
-        
-    
+        artist_results = crud.search_artist(db, query)
+        album_results = crud.search_album(db, query)
 
-    
+        results = artist_results + album_results 
+
+        titles = [f"{album["title"]}, {album["artist"]}" for album in results]
+
+        return "\n".join(titles)
+        

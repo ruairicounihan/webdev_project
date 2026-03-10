@@ -10,14 +10,27 @@ def search_all(db, search=False):
 
 #search just artists
 def search_artist(db, query):
+    
+    query_small_cap = f"%{query.lower()}%"
+    
     albums = db.execute(""" SELECT * FROM albums
-                            WHERE artist = ?; """
-                            , (query,)).fetchall()
+                            WHERE LOWER(artist) LIKE ?; """
+                            , (query_small_cap,)).fetchall()
+    print("inside search")
+    print(albums)
     return albums
 
 #search just albums
-def search_album(search=False):
-    pass
+def search_album(db, query):
+    
+    query_small_cap = f"%{query.lower()}%"
+    
+    albums = db.execute(""" SELECT * FROM albums
+                            WHERE LOWER(title) LIKE ?; """
+                            , (query_small_cap,)).fetchall()
+    print("inside search")
+    print(albums)
+    return albums
 
 #search just songs
 def search_song(search=False):
