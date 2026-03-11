@@ -10,3 +10,9 @@ CREATE TABLE albums
     user_score REAL,
     rating_count INTEGER
 );
+
+CREATE TABLE favorites
+(
+    user_id INTEGER ,
+    album_id INTEGER
+);

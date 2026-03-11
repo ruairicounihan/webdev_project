@@ -32,14 +32,13 @@ def search_album(db, query):
     print(albums)
     return albums
 
-#search just songs
-def search_song(search=False):
-    pass
 
 #rates an album with a score and allows comment
-def rate_album(rating, review, album_id):
+def rate_album(rating, album_id):
     pass
 
+def comment(db, album_id, user_comment):
+    pass
 
 #gets all albums. Returns everything if year is not set. Can be used to categorise. 
 def get_all_albums(year=False):
@@ -59,9 +58,17 @@ def check_password(password):
 def add_favorites(album_id):
     pass
 
-def get_favorites():
-    pass
+def get_favorites(db):  
+    user_id = 1
+    
+    # T
+    favorites = db.execute("""
+        SELECT albums.* FROM albums
+        JOIN favorites ON albums.id = favorites.album_id
+        WHERE favorites.user_id = ?;
+    """, (user_id,)).fetchall()
 
+    return favorites
 
 
 

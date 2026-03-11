@@ -34,3 +34,10 @@ def search_by():
         return render_template("index.html", results=results, form=form)
     return render_template("index.html", results=[], form=form)
         
+        
+#returns a users entire fav list up to this point.
+@app.route("/get_favorites")
+def get_favorites():
+    db = get_db()
+    favorites = crud.get_favorites(db)
+    return render_template("favorites.html", favorites=favorites)

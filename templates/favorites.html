@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+    <p>
+        {% if favorites %}
+            <ul>
+            {% for album in favorites %}
+                <li>{{ album.title }} by {{ album.artist }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No favorites found!!</p>
+        {% endif %}
+    </p>
+
+
+
+{% endblock %}
+
+
