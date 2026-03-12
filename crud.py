@@ -1,5 +1,7 @@
 ### creating crud.py file to keep my app.py clean###
 ### can also use to test against DB without worrying about bringing the whole flask app up ###
+import os
+import sqlite3
 
 #searches DB for given string for artists, albums and songs
 def search_all(db, search=False):
@@ -49,15 +51,15 @@ def get_all_albums(year=False):
 ######## USER RELATED ##########
 
 
-def register_user(email, password):
+def register_user(email, username, password):
     pass
 
 def check_password(password):
     pass
 
 def add_fav(db, user_id, album_id):
-    print(f"DEBUG: Attempting to add {album_id} for user {user_id}") 
-    
+    print(f"add_fav called with user_id={user_id}, album_id={album_id}")
+
     existing = db.execute(
         """
         SELECT * FROM favorites WHERE user_id = ? AND album_id = ?;
@@ -73,24 +75,36 @@ def add_fav(db, user_id, album_id):
         )
         db.commit()
 
-def remove_favorite(db, user_id, album_id):
+def remove_fav(db, user_id, album_id):
         db.execute(""" DELETE FROM favorites WHERE user_id = ? AND album_id = ?; """,(user_id, album_id),)
         db.commit()
         
         
-def get_favorites(db):  
-    user_id = 1
-    
-    
-    favorites = db.execute("""
-        SELECT albums.* FROM albums
-        JOIN favorites ON albums.id = favorites.album_id
-        WHERE favorites.user_id = ?;
-    """, (user_id,)).fetchall()
+def get_favorite_album_ids(db, user_id):
+    favorites = db.execute(""" SELECT album_id FROM favorites WHERE user_id = ?; """, (user_id,),).fetchall()
+    return {row["album_id"] for row in favorites}
 
+
+def get_favorites(db, user_id):  
+    favorites = db.execute("""SELECT albums.* FROM albums JOIN favorites ON albums.album_id = favorites.album_id
+                              WHERE favorites.user_id = ?;""", (user_id,)).fetchall()
     return favorites
+    
 
 
-
+""" Testing...
+"""
 if __name__ == "__main__":
-    search_all()
+    database_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "reviews.db")
+    db = sqlite3.connect(database_path)
+    db.row_factory = sqlite3.Row
+
+    print("Connected to:", database_path)
+
+    albums = db.execute("SELECT album_id, title, artist FROM albums LIMIT 5;").fetchall()
+
+    print("\nSample albums:")
+    for row in albums:
+        print(dict(row))
+
+    db.close()

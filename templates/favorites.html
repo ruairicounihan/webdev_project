@@ -4,14 +4,45 @@
 
     <p>
         {% if favorites %}
-            <ul>
-            {% for album in favorites %}
-                <li>{{ album.title }} by {{ album.artist }}</li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No favorites found!!</p>
-        {% endif %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Artist</th>
+                        <th>Release Date</th>
+                        <th>Genres</th>
+                        <th>User Score</th>
+                        <th>Rating Count</th>
+                        <th>Favourites</th>
+                        <th>Reviews</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for album in favorites   %}
+                    <tr>
+                        <td>{{ album.title }}</td>
+                        <td>{{ album.artist }}</td>
+                        <td>{{ album.release_date }}</td>
+                        <td>{{ album.genres }}</td>
+                        <td>{{ album.user_score }}</td>
+                        <td>{{ album.rating_count }}</td>
+                        <td>
+                            <form action="{{ url_for('updated_favorites') }}" method="post">
+                                <input type="hidden" name="album_id" value="{{ album.album_id }}" />
+                                <input type="hidden" name="query" value="{{ query }}" />
+                                <button type="submit">Remove from favourites</button>
+                            </form>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('review_page', album_id=album.id, query=query) }}">View Reviews</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p>No results found</p>
+            {% endif %} 
     </p>
 
 
