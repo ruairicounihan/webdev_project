@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for
 from database import get_db, close_db
 from flask_session import Session
 import crud
@@ -8,19 +8,12 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "Ruairi's Key"
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-app.config["WTF_CSRF_ENABLED"] = False
+
 Session(app)
 app.teardown_appcontext(close_db)
 
-@app.route("/search")
+@app.route("/search" , methods=["POST", "GET"])    
 def search():
-    db = get_db()
-    albums = crud.search_all(db)
-    titles = [album["title"] for album in albums]
-    return render_template("index.html", titles=titles)
-
-@app.route("/search_by" , methods=["POST", "GET"])    
-def search_by():
     form = SearchForm()
     if form.validate_on_submit():
         query = form.query.data
@@ -41,3 +34,21 @@ def get_favorites():
     db = get_db()
     favorites = crud.get_favorites(db)
     return render_template("favorites.html", favorites=favorites)
+
+@app.route("/add_favorite", methods=["POST"])
+def add_favorite():
+    db = get_db()
+    album_id = request.form.get("album_id", type=int)
+    print(album_id)
+    query = request.form.get("query", "".strip())
+    print(query)
+    user_id = 4
+    crud.add_fav(db, user_id, album_id)
+    return redirect(url_for("search", query=query))
+
+
+
+
+@app.route("/review_page")
+def review_page():
+    pass

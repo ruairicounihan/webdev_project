@@ -3,7 +3,8 @@
 {% block main_content %}
 
     <p>
-        <form action="" method="post" novalidate>
+        <form action="{{ url_for('search') }}" method="post" novalidate>
+            {{ form.hidden_tag() }}
             {{ form.query.label }}
             {{ form.query() }}
             <br />
@@ -16,16 +17,54 @@
 
     <p>
         {% if results %}
-            <ul>
-            {% for album in results %}
-                <li>{{ album.title }} by {{ album.artist }}</li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No results found</p>
-        {% endif %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Artist</th>
+                            <th>Release Date</th>
+                            <th>Genres</th>
+                            <th>User Score</th>
+                            <th>Rating Count</th>
+                            <th>Favourites</th>
+                            <th>Reviews</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for album in results %}
+                        <tr>
+                            <td>{{ album.title }}</td>
+                            <td>{{ album.artist }}</td>
+                            <td>{{ album.release_date }}</td>
+                            <td>{{ album.genres }}</td>
+                            <td>{{ album.user_score }}</td>
+                            <td>{{ album.rating_count }}</td>
+                            <td>
+                                {% if album.id in favorite_ids %}
+                                    <form action="{{ url_for('remove_favorite') }}" method="post">
+                                        <input type="hidden" name="album_id" value="{{ album.album_id }}" />
+                                        <input type="hidden" name="query" value="{{ query }}" />
+                                        <button type="submit">Remove from favourites</button>
+                                    </form>
+                                {% else %}
+                                    <form action="{{ url_for('add_favorite') }}" method="post">
+                                        <input type="hidden" name="album_id" value="{{ album.album_id }}" />
+                                        <input type="hidden" name="query" value="{{ query }}" />
+                                        <button type="submit">Add to favourites</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('review_page', album_id=album.id, query=query) }}">View Reviews</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No results found</p>
+            {% endif %}
     </p>
-
 
 
 {% endblock %}

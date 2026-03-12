@@ -16,7 +16,7 @@ def search_artist(db, query):
     albums = db.execute(""" SELECT * FROM albums
                             WHERE LOWER(artist) LIKE ?; """
                             , (query_small_cap,)).fetchall()
-    print("inside search")
+    print("inside search artist")
     print(albums)
     return albums
 
@@ -28,7 +28,7 @@ def search_album(db, query):
     albums = db.execute(""" SELECT * FROM albums
                             WHERE LOWER(title) LIKE ?; """
                             , (query_small_cap,)).fetchall()
-    print("inside search")
+    print("inside search album")
     print(albums)
     return albums
 
@@ -55,13 +55,33 @@ def register_user(email, password):
 def check_password(password):
     pass
 
-def add_favorites(album_id):
-    pass
+def add_fav(db, user_id, album_id):
+    print(f"DEBUG: Attempting to add {album_id} for user {user_id}") 
+    
+    existing = db.execute(
+        """
+        SELECT * FROM favorites WHERE user_id = ? AND album_id = ?;
+        """,(user_id, album_id),).fetchone()
 
+    if existing is None:
+        db.execute(
+            """
+            INSERT INTO favorites (user_id, album_id)
+            VALUES (?, ?);
+            """,
+            (user_id, album_id),
+        )
+        db.commit()
+
+def remove_favorite(db, user_id, album_id):
+        db.execute(""" DELETE FROM favorites WHERE user_id = ? AND album_id = ?; """,(user_id, album_id),)
+        db.commit()
+        
+        
 def get_favorites(db):  
     user_id = 1
     
-    # T
+    
     favorites = db.execute("""
         SELECT albums.* FROM albums
         JOIN favorites ON albums.id = favorites.album_id

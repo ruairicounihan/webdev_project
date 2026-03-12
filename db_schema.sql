@@ -1,8 +1,9 @@
 DROP TABLE IF EXISTS albums;
+DROP TABLE IF EXISTS favorites;
 
 CREATE TABLE albums
 (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    album_id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     artist TEXT NOT NULL,
     release_date TEXT,
@@ -13,6 +14,6 @@ CREATE TABLE albums
 
 CREATE TABLE favorites
 (
-    user_id INTEGER ,
-    album_id INTEGER
+    user_id INTEGER NOT NULL ,
+    album_id INTEGER NOT NULL
 );
