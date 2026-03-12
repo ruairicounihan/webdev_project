@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS albums;
 DROP TABLE IF EXISTS favorites;
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE albums
 (
@@ -14,6 +15,12 @@ CREATE TABLE albums
 
 CREATE TABLE favorites
 (
-    user_id INTEGER NOT NULL ,
+    user_id TEXT NOT NULL ,
     album_id INTEGER NOT NULL
+);
+
+CREATE TABLE users
+(
+    user_id TEXT PRIMARY KEY,
+    password TEXT NOT NULL
 );

@@ -7,14 +7,21 @@
     </head>
 
     <nav>
-        <a href="{{ url_for('search') }}">Home</a>
-        <a href="{{ url_for('get_favorites') }}">Favourites</a>
-        <a href="">My Ratings</a>
-        <a href="">Browse</a>
-        <a href="">Log Out</a>
+        {% if g.user %}
+            <a href="{{ url_for('search') }}">Home</a>
+            <a href="{{ url_for('get_favorites') }}">Favourites</a>
+            <a href="">My Ratings</a>
+            <a href="">Browse</a>
+            <span class="user-info">User: {{ g.user }}</span>
+            <a href="{{ url_for('logout') }}">Log Out</a>
+        {% else %}
+            {# Links shown when logged out #}
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('register') }}">Register</a>
+        {% endif %}
     </nav>
 
     <body>
         {% block main_content %}{% endblock %}
     </body>
- </html>
+</html>
