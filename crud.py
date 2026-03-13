@@ -35,12 +35,22 @@ def search_album(db, query):
     return albums
 
 
-#rates an album with a score and allows comment
-def rate_album(rating, album_id):
-    pass
+def get_album(db, album_id):
+    return db.execute(""" SELECT * FROM albums WHERE album_id = ?; """, (album_id,)).fetchone()
 
-def comment(db, album_id, user_comment):
-    pass
+
+
+def get_album_reviews(db, album_id):
+    return db.execute(""" SELECT * FROM reviews WHERE album_id = ?;""", (album_id,)).fetchall()
+
+
+
+
+
+
+
+
+
 
 #gets all albums. Returns everything if year is not set. Can be used to categorise. 
 def get_all_albums(year=False):
@@ -49,14 +59,6 @@ def get_all_albums(year=False):
 
 
 ######## USER RELATED ##########
-
-
-def register_user(email, username, password):
-    pass
-
-def check_password(password):
-    pass
-
 def add_fav(db, user_id, album_id):
     print(f"add_fav called with user_id={user_id}, album_id={album_id}")
 
@@ -90,6 +92,15 @@ def get_favorites(db, user_id):
                               WHERE favorites.user_id = ?;""", (user_id,)).fetchall()
     return favorites
     
+
+def add_review(db, user_id, album_id, rating, comment):
+    db.execute(""" INSERT INTO reviews (user_id, album_id, rating, comment) VALUES (?,?,?,?);""",(user_id, album_id, rating, comment))
+    db.commit()
+ 
+def get_my_reviews(db, user_id):
+    myReviews = db.execute(""" SELECT albums.title, albums.artist, reviews.rating, reviews.comment, reviews.time, reviews.user_id FROM albums JOIN reviews ON albums.album_id = reviews.album_id
+                    WHERE reviews.user_id = ?;""", (user_id,)).fetchall()
+    return myReviews
 
 
 """ Testing...

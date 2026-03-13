@@ -3,7 +3,7 @@ from database import get_db, close_db
 from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 import crud
-from forms import SearchForm, RegistrationForm, LoginForm
+from forms import SearchForm, RegistrationForm, LoginForm, ReviewForm
 from functools import wraps
 
 app = Flask(__name__)
@@ -93,13 +93,32 @@ def updated_favorites():
     return redirect(url_for("get_favorites", query=query))
 
 
-@app.route("/review_page")
-@login_required 
-def review_page():
-    pass
+@app.route("/review_page/<int:album_id>", methods=["GET", "POST"])
+@login_required
+def review_page(album_id):
+    db = get_db()
+    form = ReviewForm()
+    album = crud.get_album(db, album_id)
+    reviews = crud.get_album_reviews(db, album_id)
+    
+    if form.validate_on_submit():
+        user_id = g.user
+        crud.add_review(db, user_id, album_id, form.rating.data, form.comment.data)
+        return redirect(url_for("review_page", album_id=album_id))
+    
+    return render_template("reviews.html", album=album, reviews=reviews, form=form)
 
-    """User Functions from labs
-    """
+@app.route("/my_reviews" ,methods=["POST", "GET"])
+@login_required
+def my_reviews():
+    db = get_db()
+    user_id = g.user
+    my_reviews = crud.get_my_reviews(db, user_id)
+    return render_template("my_reviews.html", my_reviews=my_reviews)
+    
+
+    """User Functions from labs"""
+    
     
 @app.route("/register", methods=["GET", "POST"])
 def register():

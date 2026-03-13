@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+
+
+        <h2>Review Album!</h2>
+            <p>Title: {{ album.title }}</p>
+            <p>Artist: {{ album.artist }} </p>
+
+            <form action="{{ url_for("review_page", album_id=album.album_id) }}" method="POST" novalidate>
+                {{ form.hidden_tag() }}
+
+                <input type="hidden" name="album_id" value="{{ album.album_id }}">
+                
+                {{ form.rating.label }}
+                {{ form.rating() }}
+                {% for error in form.rating.errors %}
+                    {{ error }}
+                {% endfor %}
+                <br />
+
+                {{ form.comment.label }}
+                {{ form.comment() }}    
+                <br />
+
+                {{ form.submit() }}
+
+
+        <h3>Past Reviews</h3>
+
+        {% if reviews %}
+            <table>
+                <tr>
+                    <th>User</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>Created At</th>
+                </tr>
+                
+                {% for review in reviews %}
+                    <tr>
+                        <td> {{ review.user_id }} </td>
+                        <td> {{ review.rating }} </td>
+                        <td> {{ review.comment }} </td>
+                        <td> {{ review.time }}</td>
+                    </tr>
+
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No reviews yet!</p>
+        {% endif %}
+{% endblock %}

@@ -55,7 +55,7 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="{{ url_for('review_page', album_id=album.id, query=query) }}">View Reviews</a>
+                                <a href="{{ url_for('review_page', album_id=album.album_id , query=query) }}">View Reviews</a>
                             </td>
                         </tr>
                         {% endfor %}

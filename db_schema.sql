@@ -1,6 +1,8 @@
 DROP TABLE IF EXISTS albums;
 DROP TABLE IF EXISTS favorites;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS reviews;
+
 
 CREATE TABLE albums
 (
@@ -24,3 +26,14 @@ CREATE TABLE users
     user_id TEXT PRIMARY KEY,
     password TEXT NOT NULL
 );
+
+CREATE TABLE reviews
+(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    album_id INTEGER NOT NULL,
+    rating INTEGER NOT NULL CHECK(rating >= 0 AND rating <= 100),
+    comment TEXT,
+    time TEXT DEFAULT CURRENT_TIMESTAMP --found online--
+);
+

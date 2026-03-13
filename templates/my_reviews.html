@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+        <h3>My Reviews</h3>
+
+        {% if my_reviews %}
+            <table>
+                <tr>
+                    <th>User</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>Created At</th>
+                </tr>
+                
+                {% for review in my_reviews %}
+                    <tr>
+                        <td> {{ review.user_id }} </td>
+                        <td> {{ review.rating }} </td>
+                        <td> {{ review.comment }} </td>
+                        <td> {{ review.time }}</td>
+                    </tr>
+
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No reviews yet!</p>
+        {% endif %}
+{% endblock %}
