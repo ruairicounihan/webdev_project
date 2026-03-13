@@ -6,16 +6,18 @@
 
         {% if my_reviews %}
             <table>
-                <tr>
-                    <th>User</th>
-                    <th>Rating</th>
-                    <th>Comment</th>
-                    <th>Created At</th>
+                <tr scope="row">
+                    <th scope="col">User</th>
+                    <th scope="col">Album</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">Comment</th>
+                    <th scope="col">Created At</th>
                 </tr>
                 
                 {% for review in my_reviews %}
-                    <tr>
+                    <tr scope="row">
                         <td> {{ review.user_id }} </td>
+                        <td> {{ review.title }} </td>
                         <td> {{ review.rating }} </td>
                         <td> {{ review.comment }} </td>
                         <td> {{ review.time }}</td>

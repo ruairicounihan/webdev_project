@@ -4,9 +4,8 @@ import os
 import sqlite3
 
 #searches DB for given string for artists, albums and songs
-def search_all(db, search=False):
-    albums = db.execute( """ SELECT * FROM albums;""").fetchall()
-  # print(type(albums))    
+def search_all(db):
+    albums = db.execute( """ SELECT * FROM albums;""").fetchall()   
     return albums
     
 
@@ -18,8 +17,6 @@ def search_artist(db, query):
     albums = db.execute(""" SELECT * FROM albums
                             WHERE LOWER(artist) LIKE ?; """
                             , (query_small_cap,)).fetchall()
-    print("inside search artist")
-    print(albums)
     return albums
 
 #search just albums
@@ -42,20 +39,6 @@ def get_album(db, album_id):
 
 def get_album_reviews(db, album_id):
     return db.execute(""" SELECT * FROM reviews WHERE album_id = ?;""", (album_id,)).fetchall()
-
-
-
-
-
-
-
-
-
-
-#gets all albums. Returns everything if year is not set. Can be used to categorise. 
-def get_all_albums(year=False):
-    pass
-
 
 
 ######## USER RELATED ##########

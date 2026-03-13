@@ -14,6 +14,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 app.teardown_appcontext(close_db)
 
+
 @app.before_request
 def load_logged_in_user():
     g.user = session.get("user_id", None)
@@ -32,23 +33,24 @@ def login_required(view):
 def search():
     form = SearchForm()
     query = ""
-    
+    db = get_db()
+    user_id = g.user
     if request.method == "POST" and form.validate_on_submit():
         query = form.query.data
     elif request.method == "GET":
         query = request.args.get("query", "").strip()
         form.query.data = query
         
-    if query:
-        db = get_db()
-        user_id = g.user
+    if query:  
         artist_results = crud.search_artist(db, query)
         album_results = crud.search_album(db, query)
         results = artist_results + album_results 
         favorite_ids = crud.get_favorite_album_ids(db, user_id)
-
         return render_template("index.html", results=results, form=form, query=query, favorite_ids=favorite_ids)
-    return render_template("index.html", results=[], form=form, query="", favorite_ids=set())
+    else:
+        album_results = crud.search_all(db)
+        favorite_ids = crud.get_favorite_album_ids(db, user_id)
+    return render_template("index.html", results=album_results, form=form, query="", favorite_ids=favorite_ids)
         
         
 #returns a users entire fav list up to this point.
